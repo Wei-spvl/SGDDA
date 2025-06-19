@@ -91,7 +91,7 @@ def get_all_data(All_data, All_label, HalfWidth):
     num_class = int(np.max(label))
     print(f'num_class : {num_class}')
 
-#找到每个类别的所有索引，类别里面然后随机打乱，然后保存在train[i]里面
+
     for i in range(num_class):
         indices = [j for j, x in enumerate(Row.ravel().tolist()) if
                    label[Row[j], Column[j]] == i + 1]
@@ -122,13 +122,7 @@ def get_all_data(All_data, All_label, HalfWidth):
     print('processed all label shape:', processed_label.shape)
     print('get_all_data() end...')
     return index, processed_data, processed_label, label, RandPerm, Row, Column,nTrain
-#index：这是一个长度为 nTest 的数组，存储了所有样本的索引值。每个索引对应一个样本的编号，用来标识处理过的数据。
-#processed_data：这是处理后的数据，形状为 [nTest, nBand, 2 * HalfWidth + 1, 2 * HalfWidth + 1]。每个样本是一个以中心像素为中心的正方形区域（宽度为 2 * HalfWidth + 1），并且每个样本有 nBand 个光谱波段的特征。这是最终用于训练或测试的输入数据。
-#processed_label：这是处理后的标签，形状为 [nTest]。每个元素对应处理后的数据中的样本类别标签，并且将标签值减去了 1，因此类别标签从 0 开始（假设原始标签从 1 开始）。
-#label：这是原始标签经过 np.pad() 填充后的标签矩阵，大小增加了 HalfWidth，用于在处理数据时方便提取中心像素附近的区域。
-#RandPerm：这是打乱后的样本索引数组，表示原始标签中样本被随机排列后的顺序，用于随机化数据顺序。
-#Row：这是一个数组，存储了非零标签的像素在图像中的行坐标。即，所有属于某个类别的像素行坐标。
-#Column：这是一个数组，存储了非零标签的像素在图像中的列坐标。即，所有属于某个类别的像素列坐标。
+
 
 def get_all_test_data(All_data, All_label, HalfWidth):
     print('get_all_data() run...')
@@ -365,21 +359,9 @@ def load_data_hyrank_st(image_file_s, image_file_t):
     image_data_t = sio.loadmat(image_file_t)
 
     data_all_s = image_data_s['ori_data']
-    # band1 = data_all_s[:, :, 50]  # 第1个波段
-    # band2 = data_all_s[:, :, 12]  # 第2个波段
-    # band3 = data_all_s[:, :, 27]
-    # pseudo_color_image = np.dstack((band1, band2, band3))
-    # plt.imshow(pseudo_color_image)
-    # plt.colorbar()  # 显示颜色条
-    # plt.show()
+
     data_all_t = image_data_t['ori_data']
-    # band1 = data_all_t[:, :, 50]  # 第1个波段
-    # band2 = data_all_t[:, :, 12]  # 第2个波段
-    # band3 = data_all_t[:, :, 27]
-    # pseudo_color_image = np.dstack((band1, band2, band3))
-    # plt.imshow(pseudo_color_image)
-    # plt.colorbar()  # 显示颜色条
-    # plt.show()
+
 
     im_src = np.asarray(data_all_s, np.float32)
     im_trg = np.asarray(data_all_t, np.float32)
@@ -387,13 +369,7 @@ def load_data_hyrank_st(image_file_s, image_file_t):
     im_trg = im_trg.transpose((2, 0, 1))
     src_in_trg = FDA_source_to_target_np(im_src, im_trg, L=0.025)
     src_in_trg = src_in_trg.transpose((1, 2, 0))
-    # band1 = src_in_trg[:, :, 50]  # 第1个波段
-    # band2 = src_in_trg[:, :, 12]  # 第2个波段
-    # band3 = src_in_trg[:, :, 27]
-    # pseudo_color_image = np.dstack((band1, band2, band3))
-    # plt.imshow(pseudo_color_image)
-    # plt.colorbar()  # 显示颜色条
-    # plt.show()
+
     data = src_in_trg.reshape(np.prod(src_in_trg.shape[:2]), np.prod(src_in_trg.shape[2:]))  # (111104,204)
     data_scaler = preprocessing.scale(data)  # 标准化 (X-X_mean)/X_std,
     Data_Band_Scaler = data_scaler.reshape(src_in_trg.shape[0], src_in_trg.shape[1], src_in_trg.shape[2])
@@ -464,38 +440,18 @@ def load_data_houston_st(image_file_s, image_file_t):
     data_all_t = image_data_t['ori_data']
 
     im_src = np.asarray(data_all_s, np.float32)
-    ##pca可视化
-    # data_flat = im_src.reshape(-1, im_src.shape[2])  # (H*W, Bands)
-    # pca = PCA(n_components=3)
-    # pca_result = pca.fit_transform(data_flat)
-    # pseudo_color_image = pca_result.reshape(im_src.shape[0], im_src.shape[1], 3)
-    # plt.imshow(pseudo_color_image)
-    # plt.colorbar()
-    # plt.show()
+
 
     im_trg = np.asarray(data_all_t, np.float32)
 
-    # data_flat = im_trg.reshape(-1, im_trg.shape[2])  # (H*W, Bands)
-    # pca = PCA(n_components=3)
-    # pca_result = pca.fit_transform(data_flat)
-    # pseudo_color_image = pca_result.reshape(im_trg.shape[0], im_trg.shape[1], 3)
-    # plt.imshow(pseudo_color_image)
-    # plt.colorbar()
-    # plt.show()
+
 
     im_src = im_src.transpose((2, 0, 1))
     im_trg = im_trg.transpose((2, 0, 1))
     src_in_trg = FDA_source_to_target_np(im_src, im_trg, L=0.005)
     src_in_trg = src_in_trg.transpose((1, 2, 0))
 
-    #pca可视化
-    # data_flat = src_in_trg.reshape(-1, src_in_trg.shape[2])  # (H*W, Bands)
-    # pca = PCA(n_components=3)
-    # pca_result = pca.fit_transform(data_flat)
-    # pseudo_color_image = pca_result.reshape(src_in_trg.shape[0], src_in_trg.shape[1], 3)
-    # plt.imshow(pseudo_color_image)
-    # plt.colorbar()
-    # plt.show()
+
 
     Data_Band_Scaler = src_in_trg
 
@@ -541,21 +497,10 @@ def load_data_YRD_st(image_file_s,image_file_t):
     # print(label_data.keys())
     data_all_s = image_data_s['HSI']
     #
-    # band1 = data_all_s[:, :, 50]  # 第1个波段
-    # band2 = data_all_s[:, :, 12]  # 第2个波段
-    # band3 = data_all_s[:, :, 27]
-    # pseudo_color_image = np.dstack((band1, band2, band3))
-    # plt.imshow(pseudo_color_image)
-    # plt.colorbar()  # 显示颜色条
-    # plt.show()
+
+
     data_all_t = image_data_t['HSI']
-    # band1 = data_all_t[:, :, 50]  # 第1个波段
-    # band2 = data_all_t[:, :, 12]  # 第2个波段
-    # band3 = data_all_t[:, :, 27]
-    # pseudo_color_image = np.dstack((band1, band2, band3))
-    # plt.imshow(pseudo_color_image)
-    # plt.colorbar()  # 显示颜色条
-    # plt.show()
+
     im_src = np.asarray(data_all_s, np.float32)
     im_trg = np.asarray(data_all_t, np.float32)
     im_src = im_src.transpose((2, 0, 1))
@@ -619,13 +564,7 @@ def load_data_pavia_st(image_file_s, image_file_t):
     im_trg = im_trg.transpose((2, 0, 1))
     src_in_trg = FDA_source_to_target_np(im_src, im_trg, L=0.3)
     src_in_trg = src_in_trg.transpose((1, 2, 0))
-    # band1 = src_in_trg[:, :, 50]  # 第1个波段
-    # band2 = src_in_trg[:, :, 12]  # 第2个波段
-    # band3 = src_in_trg[:, :, 27]
-    # pseudo_color_image = np.dstack((band1, band2, band3))
-    # plt.imshow(pseudo_color_image)
-    # plt.colorbar()  # 显示颜色条
-    # plt.show()
+
     data = src_in_trg.reshape(np.prod(src_in_trg.shape[:2]), np.prod(src_in_trg.shape[2:]))  # (111104,204)
     data_scaler = preprocessing.scale(data)  # 标准化 (X-X_mean)/X_std,
     Data_Band_Scaler = data_scaler.reshape(src_in_trg.shape[0], src_in_trg.shape[1], src_in_trg.shape[2])
