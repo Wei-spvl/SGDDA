@@ -1,10 +1,7 @@
-"""
-@author: Junguang Jiang
-@contact: JiangJunguang1123@outlook.com
-"""
+
 import torch
 
-#entropy用来计算熵
+
 def entropy(predictions: torch.Tensor, reduction='none') -> torch.Tensor:
     r"""Entropy of prediction.
     The definition is:
